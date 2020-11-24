@@ -10,7 +10,7 @@ module.exports.sendMessage = async (req, res) => {
     const response = await plivoClient.messages.create(src, dst, text);
     res.send({ response: response });
   } catch (error) {
-    console.error(error);
+    res.send({ response: new Error(error).message });
   }
 };
 
