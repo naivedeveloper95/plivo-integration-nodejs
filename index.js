@@ -13,9 +13,9 @@ server.use("/", [require("./routes")]);
 
 // Start the server
 server.listen(process.env.PORT, (error) => {
-    if (error) {
-        console.error("Error starting", error);
-    } else {
-        console.info(`Listening on port ${process.env.PORT}`);
-    }
+  if (error) {
+    console.error("Error starting", error);
+  } else {
+    console.info(`Listening on port ${process.env.PORT}`);
+  }
 });
