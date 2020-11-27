@@ -16,15 +16,18 @@ module.exports.sendMessage = async (req, res) => {
 
 module.exports.recieveSMS = (req, res) => {
   // Sender's phone number
-  const from_number = req.param("From");
+  const from_number = req.body.From || req.query.From;
   // Receiver's phone number - Plivo number
-  const to_number = req.param("To");
+  const to_number = req.body.To || req.query.To;
   // The text which was received
-  const text = req.param("Text");
+  const text = req.body.Text || req.query.Text;
+  //Message UUID
+  const uuid = req.body.MessageUUID || req.query.MessageUUID;
+  //Prints the message
+  const Status = req.body.Status || req.query.Status;
+  console.log('Message received - From: ' + from_number + ', To: ' + to_number + ', Status: ' + Status + ', MessageUUID: ' + uuid);
 
-  console.log(
-    "From : " + from_number + " To : " + to_number + " Text : " + text
-  );
+  console.log('Delivery status reported');
 };
 
 module.exports.replySMS = (req, res) => {
@@ -33,7 +36,7 @@ module.exports.replySMS = (req, res) => {
   // Receiver's phone number - Plivo number
   const to_number = req.param("To");
   // The text which was received
-  const text = req.param("Text");
+  const text = req.param("status");
 
   console.log(
     "From : " + from_number + " To : " + to_number + " Text : " + text
@@ -52,3 +55,13 @@ module.exports.replySMS = (req, res) => {
   });
   response.end(response.toJSON());
 };
+
+module.exports.sendMessageWithCallback = async (req, res) => {
+  try {
+    const { src, dst, text, url } = req.body;
+    const response = await plivoClient.messages.create(src, dst, text, url);
+    res.send({ response: response });
+  } catch (error) {
+    res.send({ response: new Error(error).message });
+  }
+}
